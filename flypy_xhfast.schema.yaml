@@ -7,117 +7,117 @@ schema:
   name: 飞鹤快拼
   version: "2024.05.05"
   author:
-    - boomker
+  - boomker
   description: |
     小鹤双拼+辅助码
     github.com:boomker/rime-fast-xhup
   dependencies:
-    - melt_eng          # 英文单词&词组 - 简明英汉词典(增强版)
-    - easy_en
-    - ecdict_reverse
-    - flypy_radical
-    - flypy_phrase      # 中文词库 - 现代汉语词典 & 清华开源词库
-    # - stroke
+  - melt_eng # 英文单词&词组 - 简明英汉词典(增强版)
+  - easy_en
+  - ecdict_reverse
+  - flypy_radical
+  - flypy_phrase # 中文词库 - 现代汉语词典 & 清华开源词库
+  # - stroke
 
 # 候选菜单
 menu:
-  page_size: 9    # 候选词个数
+  page_size: 9 # 候选词个数
 
 # 选项开关
 switches:
-  - name: ascii_mode
-    states: [中, E]
-  - name: ascii_punct
-    states: [。, .]
-  - name: emoji
-    states: [🈚️, 😄]
-    reset: 1
-  - name: full_shape
-    states: [半角, 全角]
-  - name: simplification
-    states: [ 简, 繁 ]
-  - name: extended_charset
-    states: [通用, 增廣]
-    reset: 1
-  - name: charset_comment
-    states: [码区提示关, 码区提示开]
-    reset: 0
+- name: ascii_mode
+  states: [中, E]
+- name: ascii_punct
+  states: [。, .]
+- name: emoji
+  states: [🈚️, 😄]
+  reset: 1
+- name: full_shape
+  states: [半角, 全角]
+- name: simplification
+  states: [简, 繁]
+- name: extended_charset
+  states: [通用, 增廣]
+  reset: 1
+- name: charset_comment
+  states: [码区提示关, 码区提示开]
+  reset: 0
 
 # 输入引擎
 engine:
   processors:
-    - lua_processor@pin_word_processor
-    - lua_processor@launcher_processor
-    - lua_processor@pair_symbols_processor
-    - lua_processor@select_char_processor
-    - lua_processor@idiom_expand_processor
-    # - lua_processor@easy_en_processor
-    - lua_processor@cold_word_drop_processor
-    - lua_processor@flypy_switcher_processor
-    - lua_processor@word_append_space_processor
-    - lua_processor@word_autocommit_processor
-    - ascii_composer
-    - recognizer
-    - key_binder
-    - speller
-    - punctuator
-    - selector
-    - navigator
-    - express_editor
+  - lua_processor@pin_word_processor
+  - lua_processor@launcher_processor
+  - lua_processor@pair_symbols_processor
+  - lua_processor@select_char_processor
+  - lua_processor@idiom_expand_processor
+  # - lua_processor@easy_en_processor
+  - lua_processor@cold_word_drop_processor
+  - lua_processor@flypy_switcher_processor
+  - lua_processor@word_append_space_processor
+  - lua_processor@word_autocommit_processor
+  - ascii_composer
+  - recognizer
+  - key_binder
+  - speller
+  - punctuator
+  - selector
+  - navigator
+  - express_editor
   segmentors:
-    - ascii_segmentor
-    - matcher
-    - abc_segmentor
-    - affix_segmentor@easy_en
-    - affix_segmentor@make_sentence
-    - affix_segmentor@laTeX_formula
-    - affix_segmentor@radical_lookup
-    - affix_segmentor@chinese_number
-    - affix_segmentor@flypy_key_help
-    - punct_segmentor
-    - fallback_segmentor
+  - ascii_segmentor
+  - matcher
+  - abc_segmentor
+  - affix_segmentor@easy_en
+  - affix_segmentor@make_sentence
+  - affix_segmentor@laTeX_formula
+  - affix_segmentor@radical_lookup
+  - affix_segmentor@chinese_number
+  - affix_segmentor@flypy_key_help
+  - punct_segmentor
+  - fallback_segmentor
   translators:
-    - punct_translator
-    - reverse_lookup_translator
-    - table_translator@idiom_phrase
-    - table_translator@custom_phrase
-    - table_translator@melt_eng
-    - table_translator@make_sentence                  # ` 精准造词
-    - table_translator@radical_lookup                 # ~ 触发进入部件组字模式
-    - table_translator@easy_en                        # /oe 触发进入英文输入模式
-    - table_translator@flypy_key_help                 # /ok 触发进入双拼键位帮助
-    - lua_translator@pin_word_translator              # 自定义置顶词
-    - lua_translator@flypy_help_translator            # /oh 触发进入帮助菜单
-    - lua_translator@lunar_translator                 # /nl 触发显示农历
-    - lua_translator@datetime_translator              # date, week, time, /wd, /wk, /wt 触发
-    - lua_translator@launcher_translator              # /jj, /fj 触发快捷命令(可改触发前缀)
-    - lua_translator@laTex_translator                 # /lt 触发 LaTeX 输入
-    - lua_translator@number_translator                # /cn 触发繁体大写金额数字
-    - lua_translator@commit_history_translator        # /hs 触发显示上屏历史
-    - lua_translator@idiom_expand_translator          # /,0 置于输入码末尾触发简拼展开
-    # - lua_translator@easy_en_translator               # / 置于输入码末尾触发英文展开
-    - lua_translator@word_custom_translator           # ] 置于输入码末尾触发自定义单词入库
-    - lua_translator@word_autocaps_translator         # A-Z 大写字母开头触发单词自动大写
-    - lua_translator@word_autocommit_translator       # [ 单字全码和部分成语短语自动触发
-    - script_translator
+  - punct_translator
+  - reverse_lookup_translator
+  - table_translator@idiom_phrase
+  - table_translator@custom_phrase
+  - table_translator@melt_eng
+  - table_translator@make_sentence # ` 精准造词
+  - table_translator@radical_lookup # ~ 触发进入部件组字模式
+  - table_translator@easy_en # /oe 触发进入英文输入模式
+  - table_translator@flypy_key_help # /ok 触发进入双拼键位帮助
+  - lua_translator@pin_word_translator # 自定义置顶词
+  - lua_translator@flypy_help_translator # /oh 触发进入帮助菜单
+  - lua_translator@lunar_translator # /nl 触发显示农历
+  - lua_translator@datetime_translator # date, week, time, /wd, /wk, /wt 触发
+  - lua_translator@launcher_translator # /jj, /fj 触发快捷命令(可改触发前缀)
+  - lua_translator@laTex_translator # /lt 触发 LaTeX 输入
+  - lua_translator@number_translator # /cn 触发繁体大写金额数字
+  - lua_translator@commit_history_translator # /hs 触发显示上屏历史
+  - lua_translator@idiom_expand_translator # /,0 置于输入码末尾触发简拼展开
+  # - lua_translator@easy_en_translator               # / 置于输入码末尾触发英文展开
+  - lua_translator@word_custom_translator # ] 置于输入码末尾触发自定义单词入库
+  - lua_translator@word_autocaps_translator # A-Z 大写字母开头触发单词自动大写
+  - lua_translator@word_autocommit_translator # [ 单字全码和部分成语短语自动触发
+  - script_translator
   filters:
-    - reverse_lookup_filter@radical_reverse_lookup
-    - reverse_lookup_filter@ecdict_reverse_lookup     # 反查英文单词/词组的中文释义
-    - simplifier@emoji
-    - simplifier@traditionalize                       # 简繁切换
-    - lua_filter@fly_fixed_filter
-    - lua_filter@easy_en_filter
-    - lua_filter@charset_filter
-    - lua_filter@charset_comment_filter
-    - lua_filter@word_autocaps_filter
-    - lua_filter@emoji_reduce_filter
-    # - lua_filter@cn_space_en_filter
-    - lua_filter@cold_word_drop_filter
-    - lua_filter@word_autocommit_filter
-    - lua_filter@long_word_up_filter
-    - lua_filter@pin_word_filter
-    - lua_filter@launcher_filter
-    - uniquifier                                      #  只能放到最后!
+  - reverse_lookup_filter@radical_reverse_lookup
+  - reverse_lookup_filter@ecdict_reverse_lookup # 反查英文单词/词组的中文释义
+  - simplifier@emoji
+  - simplifier@traditionalize # 简繁切换
+  - lua_filter@fly_fixed_filter
+  - lua_filter@easy_en_filter
+  - lua_filter@charset_filter
+  - lua_filter@charset_comment_filter
+  - lua_filter@word_autocaps_filter
+  - lua_filter@emoji_reduce_filter
+  # - lua_filter@cn_space_en_filter
+  - lua_filter@cold_word_drop_filter
+  - lua_filter@word_autocommit_filter
+  - lua_filter@long_word_up_filter
+  - lua_filter@pin_word_filter
+  - lua_filter@launcher_filter
+  - uniquifier #  只能放到最后!
 
 # 八股文
 grammar:
@@ -126,41 +126,41 @@ grammar:
 # 主翻译器, 小鹤双拼
 translator:
   dictionary: flypy_xhfast
-  spelling_hints: 1                 # `0`: 关闭单字编码提示
+  spelling_hints: 1 # `0`: 关闭单字编码提示
   initial_quality: 1.3
   enable_user_dict: true
-  encode_commit_history: true       # 上屏历史记录
-  contextual_suggestions: true      # 开启八股文, 上下文联想
+  encode_commit_history: true # 上屏历史记录
+  contextual_suggestions: true # 开启八股文, 上下文联想
   sentence_over_completion: true
   # always_show_comments: true
   # enable_encoder: true
   # max_homophones: 7
   comment_format:
-    - xform/^\w+[[](\w+)$/~$1/      ## 单字编码提示只显示辅助码部分
-    - xform/^~\w+\s.*$//            ## 单字编码提示只显示辅助码部分
+  - xform/^\w+[[](\w+)$/~$1/ ## 单字编码提示只显示辅助码部分
+  - xform/^~\w+\s.*$// ## 单字编码提示只显示辅助码部分
 
 # "`" 精准造词
-make_sentence:                      # 精准造词
-  __include: /translator            # 复用上面的翻译器, 日志 warning 可忽略
+make_sentence: # 精准造词
+  __include: /translator # 复用上面的翻译器, 日志 warning 可忽略
   enable_sentence: true
   prefix: "`"
   tips: "〔精准造词〕"
   tag: make_sentence
 
 # 次翻译器，英文
-melt_eng:                           # 英文输入
+melt_eng: # 英文输入
   dictionary: melt_eng
   enable_encoder: false
   enable_sentence: false
   enable_user_dict: false
-  enable_completion: true           # 是否启用英文输入联想补全
+  enable_completion: true # 是否启用英文输入联想补全
   encode_commit_history: false
   initial_quality: 1.1
   comment_format:
-    - xform/.*// # 清空提示码
+  - xform/.*// # 清空提示码
 
 # 自定义短语: custom_phrase.txt
-custom_phrase:                      # 自定义短语, 包含固顶字
+custom_phrase: # 自定义短语, 包含固顶字
   dictionary: ""
   user_dict: custom_phrase
   db_class: stabledb
@@ -170,7 +170,7 @@ custom_phrase:                      # 自定义短语, 包含固顶字
   initial_quality: 99
 
 # 成语短语：idiom_phrase.txt
-idiom_phrase:                       # 成语, 俗语缩写, 实现简拼
+idiom_phrase: # 成语, 俗语缩写, 实现简拼
   dictionary: ""
   user_dict: idiom_phrase
   db_class: stabledb
@@ -178,7 +178,7 @@ idiom_phrase:                       # 成语, 俗语缩写, 实现简拼
   enable_sentence: false
   initial_quality: 0.8
 
-flypy_key_help:                     # 小鹤双拼键位帮助
+flypy_key_help: # 小鹤双拼键位帮助
   tag: flypy_key_help
   dictionary: ""
   user_dict: flypy_keymap
@@ -190,7 +190,7 @@ flypy_key_help:                     # 小鹤双拼键位帮助
   initial_quality: 1
 
 # 自动上屏短语
-flypy_phrase:                       # 自动上屏短语
+flypy_phrase: # 自动上屏短语
   dictionary: flypy_phrase
   enable_encoder: false
   enable_sentence: false
@@ -205,16 +205,16 @@ emoji:
   opencc_config: emoji.json
   tag: emoji
   tips: all
-  tags: [ abc ]
+  tags: [abc]
   inherit_comment: false
 
-traditionalize:                     # 繁体转简体
+traditionalize: # 繁体转简体
   option_name: simplification
-  opencc_config: t2s.json   # s2t.json | s2hk.json | s2tw.json | s2twp.json
-  tips: none                # 转换提示: all 都显示 | char 仅单字显示 | none 不显示。
-  tags: [abc]               # 限制在对应 tag，不对其他如反查的内容做简繁转换
+  opencc_config: t2s.json # s2t.json | s2hk.json | s2tw.json | s2twp.json
+  tips: none # 转换提示: all 都显示 | char 仅单字显示 | none 不显示。
+  tags: [abc] # 限制在对应 tag，不对其他如反查的内容做简繁转换
 
-history:                            # 上屏历史记录
+history: # 上屏历史记录
   tips: "上屏历史"
   tag: history
   prefix: "/hs"
@@ -223,20 +223,20 @@ history:                            # 上屏历史记录
   initial_quality: 1000
   excluded_types: ["punct"]
 
-pin_word:                           # 词条置顶配置
-  pin_word_key: "Control+t"   # 词条置顶快捷键, 优先级高于`key_binder`全局配置
+pin_word: # 词条置顶配置
+  pin_word_key: "Control+t" # 词条置顶快捷键, 优先级高于`key_binder`全局配置
   word_quality: 1000
-  comment_mark: " 🔝"         # 不能留空
+  comment_mark: " 🔝" # 不能留空
   excluded_types: ["flypy_key_help", "easy_en", "radical_lookup"]
 
-word_auto_commit:                   # 词条自动上屏
+word_auto_commit: # 词条自动上屏
   enable: false
 
-long_word_up:                       # 长词升频到第 idx 个位置
+long_word_up: # 长词升频到第 idx 个位置
   idx: 3
   excluded_codes: ["date", "rq", "week", "time", "lunar"]
 
-cold_wold_reduce:                   # 生僻词条降频到第 idx 个位置
+cold_wold_reduce: # 生僻词条降频到第 idx 个位置
   idx: 4
   excluded_types: ["easy_en"]
 
@@ -248,15 +248,12 @@ emoji_reduce:
 punctuator:
   import_preset: symbols
   full_shape:
-    __include: default:/punctuator/full_shape         # 从 default.yaml 导入配置
+    __include: default:/punctuator/full_shape # 从 default.yaml 导入配置
   half_shape:
     # __include: default:/punctuator/half_shape         # 从 default.yaml 导入配置
     ",": {commit: "，"}
     ".": {commit: "。"}
-    # ";": {commit: "；"}         ## 取消注释后, 下行添加注释, 以恢复默认分号
     ";": [";", "；"]
-    '"': {pair: ['‘', '’']}      ## 添加注释后：恢复默认引号
-    "'": {pair: ['“', '”']}      ## 添加注释后：恢复默认引号
     "<": [《, "<", ‹, 〈, «, ⟨, ˂, ˱]
     ">": [》, ">", ›, 〉, », ⟩, ˃, ˲]
     "/": ["/", ／, ÷]
@@ -269,7 +266,7 @@ punctuator:
     "*": ["*", ＊, ·, ・, ×, ※, ❂, ⁂, ☮, ☯, ☣]
     "(": [（, "("]
     ")": [）, ")"]
-    "[": ['[',「, 【, 〔, ［, 〚, 〘]
+    "[": ['[', 「, 【, 〔, ［, 〚, 〘]
     "]": [']', 」, 】, 〕, ］, 〛, 〙]
     "{": [『, 〖, ｛]
     "}": [』, 〗, ｝]
@@ -290,7 +287,7 @@ radical_lookup:
   suffix: "'"
   tips: 〔部件组字〕
   comment_format:
-    - erase/^.*$//
+  - erase/^.*$//
 
 # 部件拆字滤镜
 radical_reverse_lookup:
@@ -298,8 +295,8 @@ radical_reverse_lookup:
   overwrite_comment: false
   dictionary: kMandarin
   comment_format:
-    - xform/^(\w+)[[].*$/$1/
-    - xform/^/~/
+  - xform/^(\w+)[[].*$/$1/
+  - xform/^/~/
 
 #英文输入方案
 easy_en:
@@ -315,12 +312,12 @@ easy_en:
 #英文反查释意
 ecdict_reverse_lookup:
   tags: [easy_en]
-  overwrite_comment: true     # 是否开启中文释意注解
+  overwrite_comment: true # 是否开启中文释意注解
   dictionary: ecdict_reverse
   comment_format:
-    - xform/\\n/ | /
-    - xform/^/ /
-    - erase/^.$/
+  - xform/\\n/ | /
+  - xform/^/ /
+  - erase/^.$/
 
 # 处理符合特定规则的输入码，如网址、反查
 recognizer:
@@ -337,43 +334,43 @@ recognizer:
     flypy_help: "^/(oh|help)$"
     flypy_key_help: "^/ok[a-z]*$"
     chinese_number: "^/cn[0-9.]*$"
-    radical_lookup: "~[a-z]+$"              # ~ 引导部件拆字, 使用小鹤双拼编码
-    make_sentence: "^[a-z]+[`][a-z`]*$"     # ` 引导精准造词
+    radical_lookup: "~[a-z]+$" # ~ 引导部件拆字, 使用小鹤双拼编码
+    make_sentence: "^[a-z]+[`][a-z`]*$" # ` 引导精准造词
     punct: "^(/([0-9]0?|[A-Za-z]+))|(;[A-Za-z]+)$"
     url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$"
 
 # 从 default 继承快捷键
 key_binder:
-  import_preset: default    # 从 default.yaml 继承通用的
+  import_preset: default # 从 default.yaml 继承通用的
   # search: "`"               # 辅码引导符
   select_first_character: "minus"
   select_last_character: "equal"
-  pin_cand: "Control+t"     # 候选词置顶
-  drop_cand: "Control+d"    # 强制删词, 无视输入的编码
-  hide_cand: "Control+x"    # 匹配当前输入码后隐藏指定的候选字词
+  pin_cand: "Control+t" # 候选词置顶
+  drop_cand: "Control+d" # 强制删词, 无视输入的编码
+  hide_cand: "Control+x" # 匹配当前输入码后隐藏指定的候选字词
   turn_down_cand: "Control+j" # 匹配当前输入码后降频指定的候选字词
   switch_comment: "Control+n" # 切换注释(小鹤形码 / 带调拼音 / 无)
   commit_comment: "Control+p" # 注释上屏
   switch_english: "Control+g" # 切换到英文输入方案
   bindings:
-    - { when: has_menu, accept: semicolon, send: 2 }
-    - { when: has_menu, accept: apostrophe, send: 3 } ## 单引号用于第3候选
-    - { when: paging, accept: comma, send: Page_Up }  ## 逗号返回上一页
-    - { when: has_menu, accept: period, send: Page_Down }
-    - { when: composing, accept: Control+e, send: End }
-    - { when: composing, accept: Control+k, send: Shift+Delete }
-    - { when: composing, accept: Control+i, send: Shift+Left }
-    - { when: composing, accept: Control+o, send: Shift+Right }
-    - { when: composing, accept: Tab, send: Shift+Right }
-    - { when: composing, accept: Control+m, send: Return }
-    - { when: composing, accept: Control+w, send: Control+BackSpace }
-    - { when: has_menu,  accept: Control+0, toggle: simplification }
-    - { when: has_menu,  accept: Control+period, toggle: ascii_punct }
-    - { when: has_menu,  accept: Control+Shift+slash, toggle: emoji }
-    - { when: has_menu,  accept: Control+Shift+apostrophe, toggle: charset_comment }
-    - { when: composing, accept: grave, send: "`" }
-    # `键 (grave, Tab 上面那个) 为词组逐字追加辅助码.
-    # - { when: always, accept: Control+1, send_sequence: 'HelloWorld' }
+  - {when: has_menu, accept: semicolon, send: 2}
+  - {when: has_menu, accept: apostrophe, send: 3} ## 单引号用于第3候选
+  - {when: paging, accept: comma, send: Page_Up} ## 逗号返回上一页
+  - {when: has_menu, accept: period, send: Page_Down}
+  - {when: composing, accept: Control+e, send: End}
+  - {when: composing, accept: Control+k, send: Shift+Delete}
+  - {when: composing, accept: Control+i, send: Shift+Left}
+  - {when: composing, accept: Control+o, send: Shift+Right}
+  - {when: composing, accept: Tab, send: Shift+Right}
+  - {when: composing, accept: Control+m, send: Return}
+  - {when: composing, accept: Control+w, send: Control+BackSpace}
+  - {when: has_menu, accept: Control+0, toggle: simplification}
+  - {when: has_menu, accept: Control+period, toggle: ascii_punct}
+  - {when: has_menu, accept: Control+Shift+slash, toggle: emoji}
+  - {when: has_menu, accept: Control+Shift+apostrophe, toggle: charset_comment}
+  - {when: composing, accept: grave, send: "`",}
+  # `键 (grave, Tab 上面那个) 为词组逐字追加辅助码.
+# - { when: always, accept: Control+1, send_sequence: 'HelloWorld' }
 
 # 拼写设定
 speller:
@@ -383,37 +380,37 @@ speller:
   initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA
   delimiter: " '"
   algebra:
-    - erase/^ng\[kk$/            # 取消「唔 ng」的独占
-    - erase/^ng\[kx$/            # 取消「嗯 ng」的独占
-    - erase/^n\[\w+$/            # 取消「嗯 n」的独占
-    - erase/^m\[\w+$/            # 取消「呒 m」的独占
-    - erase/^m\[\w+$/            # 取消「呣 m」的独占
+  - erase/^ng\[kk$/ # 取消「唔 ng」的独占
+  - erase/^ng\[kx$/ # 取消「嗯 ng」的独占
+  - erase/^n\[\w+$/ # 取消「嗯 n」的独占
+  - erase/^m\[\w+$/ # 取消「呒 m」的独占
+  - erase/^m\[\w+$/ # 取消「呣 m」的独占
 
-    ## 字库编码到输入码的转换规则
-    - derive/^(\w+)\[(\w)(\w)$/$1\[$2$3/        # Flypy: AB[CD
-    - derive/^(\w+)\[(\w)(\w)$/$1\[$2/          # Flypy: AB[C
-    - derive/^(\w+)\[(\w)(\w)$/$1/              # Flypy: AB
-    # - derive/[[]//      # 取消注释, 直接辅码, 无论有无 [ 均可引导
+  ## 字库编码到输入码的转换规则
+  - derive/^(\w+)\[(\w)(\w)$/$1\[$2$3/ # Flypy: AB[CD
+  - derive/^(\w+)\[(\w)(\w)$/$1\[$2/ # Flypy: AB[C
+  - derive/^(\w+)\[(\w)(\w)$/$1/ # Flypy: AB
+  # - derive/[[]//      # 取消注释, 直接辅码, 无论有无 [ 均可引导
 
-    # 响应 ` 造词
-    - derive/^(\w+)\[(\w)(\w)$/$1`$2$3/        # Flypy: AB`CD
-    - derive/^(\w+)\[(\w)(\w)$/$1`$2/          # Flypy: AB`C
+  # 响应 ` 造词
+  - derive/^(\w+)\[(\w)(\w)$/$1`$2$3/ # Flypy: AB`CD
+  - derive/^(\w+)\[(\w)(\w)$/$1`$2/ # Flypy: AB`C
 
-    ## 模糊音:
-    - derive/^([jqxy])v/$1u/
-    - derive/^([jqxy])u/$1v/
-    - derive/^(u)([h])/s$2/                   # uh => sh
-    - derive/^(z)([^acdefghijklmnsu])/v$2/    # z => zh
-    - derive/^(c)([^acdefghijklmsuo])/i$2/    # c => ch
-    - derive/^(s)([^abcdefghijklmnu])/u$2/    # s => sh
-    - derive/^(i)g/$1f/                       # [zcs][h]eng => [zcs][h]en
-    - derive/^([ypdbn])b/$1k/                 # in => ing
+  ## 模糊音:
+  - derive/^([jqxy])v/$1u/
+  - derive/^([jqxy])u/$1v/
+  - derive/^(u)([h])/s$2/ # uh => sh
+  - derive/^(z)([^acdefghijklmnsu])/v$2/ # z => zh
+  - derive/^(c)([^acdefghijklmsuo])/i$2/ # c => ch
+  - derive/^(s)([^abcdefghijklmnu])/u$2/ # s => sh
+  - derive/^(i)g/$1f/ # [zcs][h]eng => [zcs][h]en
+  - derive/^([ypdbn])b/$1k/ # in => ing
 
-    # 超级简拼, 开启后可能性能不佳, 视情况开启
-    # 输入4个或更多以下字符，按下`0`触发超级简拼
-    - abbrev/^(.).+$/$1/
+  # 超级简拼, 开启后可能性能不佳, 视情况开启
+  # 输入4个或更多以下字符，按下`0`触发超级简拼
+  - abbrev/^(.).+$/$1/
 
-    # 左右并击飞键音码规则, 注释以下三行使用原版小鹤双拼
+  # 左右并击飞键音码规则, 注释以下三行使用原版小鹤双拼
   __patch:
     algebra/+:
       __include: flypy_chord_rule:/patch/speller/algebra
