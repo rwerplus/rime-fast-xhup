@@ -34,13 +34,14 @@ switches:
   states: [中, E]
 - name: ascii_punct
   states: [。, .]
+- name: full_shape
+  states: [半角, 全角]
 - name: emoji
   states: [🈚️, 😄]
   reset: 1
-- name: full_shape
-  states: [半角, 全角]
 - name: simplification
   states: [简, 繁]
+  reset: 0
 - name: extended_charset
   states: [通用, 增廣]
   reset: 1
@@ -195,6 +196,7 @@ flypy_key_help: # 小鹤双拼键位帮助
 # 自动上屏短语
 flypy_phrase: # 自动上屏短语
   dictionary: flypy_phrase
+  auto_commit: false # 词条自动上屏开关
   enable_encoder: false
   enable_sentence: false
   enable_completion: true
@@ -257,6 +259,8 @@ punctuator:
     ",": {commit: "，"}
     ".": {commit: "。"}
     ";": [";", "；"]
+    '"': {pair: ['‘', '’']} ## 添加注释后：恢复默认引号
+    "'": {pair: ['“', '”']} ## 添加注释后：恢复默认引号
     "<": [《, "<", ‹, 〈, «, ⟨, ˂, ˱]
     ">": [》, ">", ›, 〉, », ⟩, ˃, ˲]
     "/": ["/", ／, ÷]
@@ -330,6 +334,7 @@ recognizer:
     time: "^/wt$"
     date: "^(/wd|/rq)$"
     chinese_lunar: "^/nl$"
+    switch_options: "^/so$"
     history: "^/hs$"
     shortcuts: "^/fj$"
     LaTeX: "^/lt(.*)$"
