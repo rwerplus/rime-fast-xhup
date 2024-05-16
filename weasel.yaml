@@ -50,7 +50,6 @@ preset_color_schemes:
   Lumk_Light:
     name: "胖猫/Lumk"
     author: "胖猫<chubbycat@gmail.com>"
-    text_orientation: horizontal
     back_color: 0xF9F9F9
     border_color: 0xE2E7F5
     candidate_text_color: 0x121212
