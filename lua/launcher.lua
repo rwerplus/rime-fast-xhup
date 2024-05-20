@@ -50,6 +50,7 @@ end
 
 function processor.func(key, env)
     local engine = env.engine
+    local page_size = engine.schema.page_size
     local app_command_items = env.app_command_items
     local appLaunchPrefix = env.app_launch_prefix
     local favorCmdPrefix = env.favor_cmd_prefix
@@ -61,35 +62,43 @@ function processor.func(key, env)
     local preeditCodeLength = #inputCode
     local keyValue = key:repr()
 
-    local idx = -1
-    local selected_candidate_index = (not composition:empty()) and segment.selected_index or -1
-    if keyValue == "space" then
-        idx = selected_candidate_index
-    elseif keyValue == "Return" and (inputCode:match("^" .. favorCmdPrefix)) then
-        idx = selected_candidate_index
-    elseif keyValue == "semicolon" then
-        idx = 1
-    elseif keyValue == "apostrophe" then
-        idx = 2
+    if not (
+            inputCode:match("^" .. favorCmdPrefix)
+            or inputCode:match("^" .. appLaunchPrefix)
+            or inputCode:match("^/j%l+")
+        )
+    then
+        return 2
     end
 
-    if keyValue == "1" then
-        idx = 0
-    elseif string.find(keyValue, "^[2-9]$") then
-        idx = tonumber(keyValue) - 1
+    local selected_cand_idx = -1
+    local selected_candidate_index = (not composition:empty()) and segment.selected_index or -1
+    if keyValue == "space" then
+        selected_cand_idx = selected_candidate_index
+    elseif keyValue == "Return" then
+        selected_cand_idx = selected_candidate_index
+    elseif keyValue == "semicolon" then
+        selected_cand_idx = 1
+    elseif keyValue == "apostrophe" then
+        selected_cand_idx = 2
+    elseif string.find(keyValue, "^[1-9]$") then
+        selected_cand_idx = tonumber(keyValue) - 1
     elseif keyValue == "0" then
-        idx = 9
+        selected_cand_idx = 9
     end
+    local page_pos = (selected_candidate_index // page_size) + 1
+    selected_cand_idx = ((keyValue ~= -1) and (page_pos > 1))
+        and (keyValue + (page_pos - 1) * page_size) or selected_cand_idx
 
     local spec_keys = { ["Escape"] = true, ["BackSpace"] = true }
 
-    if context:has_menu() and ((idx >= 0) or spec_keys[keyValue])
+    if context:has_menu() and ((selected_cand_idx >= 0) or spec_keys[keyValue])
         and (inputCode:match("^" .. favorCmdPrefix))
     then
-        if (idx >= 0) and (inputCode == favorCmdPrefix) and (segment.prompt:match("快捷指令")) then
-            local cand = segment:get_candidate_at(idx)
+        if (selected_cand_idx >= 0) and (inputCode == favorCmdPrefix) and (segment.prompt:match("快捷指令")) then
+            local cand = segment:get_candidate_at(selected_cand_idx)
             local candidateText = cand.text
-            first_menu_selected_text = candidateText:gsub(" ", "") .. tostring(idx + 1)
+            first_menu_selected_text = candidateText:gsub(" ", "") .. tostring(selected_cand_idx + 1)
             local prompt = first_menu_selected_text:gsub("[%a%d]", "")
             if first_menu_selected_text then
                 second_menu_items = app_command_items["Favors"][first_menu_selected_text]["items"]
@@ -116,12 +125,12 @@ function processor.func(key, env)
             second_menu_selected_text = nil
             context:refresh_non_confirmed_composition() -- 刷新当前输入法候选菜单, 实现看到实时效果
             return 1                                    -- kAccepted 收下此key
-        elseif idx >= 0 then
-            local candidateText = segment:get_candidate_at(idx).text:gsub(" ", "")
+        elseif selected_cand_idx >= 0 then
+            local candidateText = segment:get_candidate_at(selected_cand_idx).text:gsub(" ", "")
             local action = app_command_items["Favors"][first_menu_selected_text]["action"]
             local items = app_command_items["Favors"][first_menu_selected_text]["items"]
             if type(items[1]) ~= "string" then
-                candidateText = candidateText .. tostring(idx + 1)
+                candidateText = candidateText .. tostring(selected_cand_idx + 1)
             end
             if second_menu_selected_text then
                 candidateText = second_menu_selected_text
@@ -153,15 +162,15 @@ function processor.func(key, env)
     end
 
     if context:has_menu() and (inputCode:match("^" .. appLaunchPrefix) or inputCode:match("^/j")) then
-        if (idx >= 0) and (preeditCodeLength > appLaunchPrefix:len()) then
+        if (selected_cand_idx >= 0) and (preeditCodeLength > appLaunchPrefix:len()) then
             local items = app_command_items[system_name][inputCode]
             if appLaunchPrefix ~= "/j" and inputCode:sub(1, appLaunchPrefix:len()) == appLaunchPrefix then
                 local appTriggerKey = "/j" .. inputCode:gsub(appLaunchPrefix, "", 1)
                 items = app_command_items[system_name][appTriggerKey]
             end
 
-            local candidateText = segment:get_candidate_at(idx).text
-            local candidateComment = segment:get_candidate_at(idx).comment
+            local candidateText = segment:get_candidate_at(selected_cand_idx).text
+            local candidateComment = segment:get_candidate_at(selected_cand_idx).comment
             local appId = nil
             if items and type(items[1]) == "table" then
                 for _, val in pairs(items) do

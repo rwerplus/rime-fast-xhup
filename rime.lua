@@ -76,7 +76,7 @@ history_translator             = commit_history.translator
 -- 详见 `lua/charset.lua`
 local charset                  = require("charset")
 charset_filter                 = charset.filter
-charset_comment_filter         = charset.comment_filter
+charset_comment_hint           = charset.comment_filter
 
 local emoji_reduce             = require("reduce_emoji")
 emoji_reduce_filter            = emoji_reduce.filter
@@ -142,10 +142,9 @@ launcher_processor             = launcher.processor
 launcher_translator            = launcher.translator
 launcher_filter                = launcher.filter
 
--- 成语短句优先, `/`, `0` 触发
+-- 成语短句优先, 'ctrl + 0' 触发
 idiom_expand                   = require("idiom_abbr_expand")
 idiom_expand_processor         = idiom_expand.processor
-idiom_expand_translator        = idiom_expand.translator
 
 flypy_switcher                 = require("flypy_switcher")
 flypy_switch_processor         = flypy_switcher.processor

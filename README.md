@@ -29,20 +29,20 @@ Rime 输入法配置文件，小鹤双拼+小鹤形码辅助方案。使用后�
 - 支持英文单词「自造词」, 在单词末尾输入 `]` 符号, 下次 (重新部署后) 就可以直接输入这个生词了
 - 支持强制删词, 按下 `Ctrl+d` / ` Ctrl+x` 触发; 词条降频, 按下 `Ctrl+j` 来触发, 将当前高亮词条放置到第 4 位, 立即生效
 - 支持词条置顶, 按下 `Ctrl+t` 触发一键置顶功能, 同一编码下, 先置顶的词条优先级最高, 后置顶的词条置后, 立即见效
-- 支持注解切换, 按下 `Ctrl+n` 触发注解轮切功能, 可显示带调拼音/鹤形码/无(即无注解), 立即见效
-- 支持注解上屏, 按下 `Ctrl+p` 可将带调拼音/鹤形码 输入上屏
-- 支持注解上屏, 按下 `Ctrl+g` 可从中文输入方案一键切换到英文输入方案
+- 支持注解切换, 按下 `Ctrl+n` 触发注解轮切功能, 可显示带调拼音、鹤形码、无注解, 立即见效
+- 支持注解上屏, 按下 `Ctrl+p` 可将带调拼音、鹤形码 输入上屏
+- 支持中英切换, 按下 `Ctrl+g` 可从中文输入方案一键切换到英文输入方案
 - 支持 Emoji 表情智能显示, 首页表情降频到第六候选; 支持应用(仅微信)内表情输出, 非应用内表情自动隐藏
-- 支持 MacOS 下输入 `/jj` 前缀的自定义短语, 触发启动/切换 App 应用; 输入 `/fj` 可见快捷操作菜单 (书签网址, 卡号等)
+- 支持 MacOS 下输入 `/jk` 前缀的自定义短语, 触发启动或切换 App 应用; 输入 `/fj` 可见快捷操作菜单 (书签网址等)
 - 支持 MacOS 下 符号成对输出, 如: `()`, `【】`, `""` 等
-- 支持分号 `;` 前缀快捷输出符号, 比如输入 `;d` 自动上屏 `、` , `;j`上屏 `。`, 解决数字后按句号键出英文 `.` 问题
+- 支持分号 `;` 前缀快捷输出符号, 比如输入 `;d` 自动上屏 `、` , `;j`上屏 `。` 缓解数字后按句号键出英文 `.` 问题
 - 支持模糊音，造福平翘舌不分的朋友
 
 ### 音码飞键组合说明
 
-- 原理类似 Rime 模糊音， 只是我采用的是 **不对应汉字读音的字母组合** , 或者某些字母组合的汉字是生僻字，会被挪用
-- 用来替换的字母组合 和 被替换的字母组合 不会相互影响 正常输入，如若不喜欢或感觉有影响可自行删除调整
-- 替换的字母有这些 `e-->q`，`f-->q` ，`t-->d` , `y-->w`, `s-->b`
+- 原理类似 Rime 模糊音， 只是我采用的是 **不对应汉字读音的字母组合** , 或者某些字母组合的汉字是低频字，会被挪用.
+  替换的字母组合 和 被替换的字母组合 不会相互影响 正常输入，如若不喜欢或感觉不适可自行删除调整.
+  替换的字母有这些 `e-->q`，`f-->q` ，`t-->d` , `y-->w`, `s-->b`
 - ```yaml
   - derive/^(j)n/$1c/
   - derive/^([jyn])t/$1d/ # t --> d
@@ -83,32 +83,35 @@ Rime 输入法配置文件，小鹤双拼+小鹤形码辅助方案。使用后�
 - 将这些文件放入 Rime 的用户目录下，重新部署（右键点击任务栏的 Rime 图标可见）即可。
   - librime 允许输入法指定用户文件夹的位置。用户文件夹的位置应使用绝对路径。请勿使用相对路径
   - 默认的用户目录:
-  - `%APPDATA%\Rime` (Windows，小狼毫: 用户文件夹的默认路径为 %APPDATA%\Rime。也可以通过「开始菜单＼小狼毫输入法＼用户文件夹」打开。);
-  - `~/Library/Rime` (MacOS，鼠鬚管: 用户文件夹的路径为 ~/Library/Rime。也可以通过「系统输入法菜单／鼠鬚管／用户设定…」打开。)
+  - `%APPDATA%\Rime` (Windows，小狼毫: 可以通过「开始菜单＼小狼毫输入法＼用户文件夹」打开)
+  - `~/Library/Rime` (MacOS，鼠鬚管: 可以通过「系统输入法菜单／鼠鬚管／用户设定…」打开)
   - ibus-rime: `~/.config/ibus/rime`
     fcitx-rime: `~/.config/fcitx/rime`
     fcitx5-rime: `~/.local/share/fcitx5/rime/`
   - `/sdcard/rime` (Android)
-  - 如果某些同名文件已经存在，本节的后续部分可能有参考价值。否则，可以直接跳过这些文件内容说明，去看下一节“附加功能”。
-  - 如果 Rime 老用户之前已有较多配置文件，希望在不混淆各类配置的同时试用本项目的完整功能。 (毕竟本项目文件较多)，也可以考虑备份/重命名原来的用户目录，将本项目单独放在新建的用户目录下部署。
+  - 如果 Rime 老用户之前已有较多配置文件，希望在不混淆各类配置的同时试用本项目的完整功能。
+    可以考虑备份、重命名原来的用户目录，将本项目单独放在新建的用户目录下部署。
 - 一些设置项需要通过修改文件内容实现。推荐使用 VS Code，Sublime Text 等通用代码编辑器。
   - 没有也不想安装代码编辑器的用户可以考虑使用 [在线 YAML 编辑器](https://codebeautify.org/yaml-editor-online)。
-  - 此外，所有配置文件都应以 UTF-8 编码保存，YAML 文件还需要保持严格的缩进 (只能用空格，不能用 Tab 符号)。
-- `flypy_xhfast.schema.yaml` 和 `flypy_xhfast.dict.yaml` 为本方案的主要文件。`flypy_xhfast.custom.yaml` 提供了一些常用设置项。其余文件均用于附加功能。
-- `default.custom.yaml` 仅用于声明本方案的依赖方案。如果用户已经有同名的文件，并且其中设置了 `schema_list` 选项，可以直接将本项目同名文件的内容添加到该选项下，而不必使用项目提供的这一文件。
+  - 所有配置文件都应以 UTF-8 编码保存，YAML 文件还需要保持严格的缩进 (只能用空格)。
+- `flypy_xhfast.schema.yaml` 和 `flypy_xhfast.dict.yaml` 为本方案的主要文件。
+  `flypy_xhfast.custom.yaml` 提供了一些常用设置项。其余文件均用于附加功能。
+- `default.custom.yaml` 仅用于声明本方案的依赖方案。如果用户已经有同名的文件，并且其中设置
+  了 `schema_list` 选项，可以直接将本项目同名文件的内容添加到该选项下，而不必使用项目提供的这一文件。
 - `cn_dicts/*.dict.yaml`, 为中文词库词典文件。
 - `en_dicts/*.dict.yaml`, 为英文词库词典文件。
-- `rime.lua` 文件用于涉及 Lua 的相关功能。如果用户已经有同名的文件，可以将本项目文件的内容复制添加到原有文件之中，但是可能需要自行确认其中的变量名、函数名与原有的那些没有冲突。
-- `scripts/flypy_dict_generator_new.py` 双拼词库转换程序，实现了汉字转小鹤双拼，小鹤音形码，简拼, 支持输出到 `yaml` 字典和 `txt` 自定义短语文件，可指定词库内容追加输出，可指定初始词频，或默认源词库的词频。
-- 鉴于部分用户使用的 Rime 版本没有自带 emoji 输入方案，本项目提供了 `emoji.schema.yaml` 和 `emoji.dict.yaml` 文件。如果用户已经有这两个文件，可以不使用本项目提供的版本，不过不排除 emoji 输入时的输入法行为会有所不同。
-- `easy_en.schema.yaml` 和 `easy_en.dict.yaml` 为作者基于 [easy-en](https://github.com/BlindingDark/rime-easy-en) 项目的英文输入方案修改得到的版本。如果用户已经有这两个文件，可以不使用本项目提供的版本，但英文单词输入的行为应该会有不同。
+- `rime.lua` 文件用于涉及 Lua 的相关功能。
+- `scripts/flypy_dict_generator_new.py` 双拼词库转换程序，实现了汉字转小鹤双拼，小鹤音形码，简拼, 支持
+  输出到 `yaml` 字典和 `txt` 自定义短语文件，可指定词库内容追加输出，可指定初始词频，或默认源词库的词频。
+- 方案自带 emoji 输出，提供了 `emoji_word.txt` 文件, 通过 OpenCC 来转换得来。
+- `easy_en.schema.yaml` 和 `easy_en.dict.yaml` 为作者基于 [easy-en](https://github.com/BlindingDark/rime-easy-en) 项目的英文输入方案修改得到的版本。
 
 ### 前缀模式
 
 - `/` 前缀：符号模式，具体见本方案的 [`symbols.custom.yaml`](https://github.com/boomker/rime-fast-xhup/blob/57bb5b093ae164f46ffac52df47b18addf89c2b1/symbols.custom.yaml) 文件。例如：敲 `/jt` 按 3，即可输入箭头“←”。
 - `/oh` 前缀：本方案帮助菜单, 输入 `/help` 效果等同, 可查看方案中的快捷键, 功能触发前缀字符串等。
 - `/ok` 前缀：小鹤双拼键位查询，该功能为双拼初学者提供。例如：敲 `okian`，可看到韵母 `ian` 对应的按键是 `m`。
-- `/oe` 前缀：单词模式，不仅可以敲完整的单词，也允许“简写”，省略掉除了首字母以外的所有元音字母（`aeiou`）。
+- `/oe` 前缀：单词模式，允许“简写”，可省略掉除了首字母以外的所有元音字母（`aeiou`）。
   例如：敲 `/oe` `elevation `或者 `/oe ` `elvtn` 再加空格，即可输入“elevation”。
 
   - 该功能基于 [easy-en](https://github.com/BlindingDark/rime-easy-en) 项目，简写特性由 `easy_en.schema.yaml` 文件中设置的拼写运算实现。
@@ -137,6 +140,7 @@ Rime 输入法配置文件，小鹤双拼+小鹤形码辅助方案。使用后�
 - 敲 `date`, `time`, `today`, `week`, `/wd`, /`wt`, `/wk`, `/nl`, 可以输入当天的日期, 时间, 星期, 农历。
 - `~` 前缀：部件组字模式 (类似搜狗拼音的 u 拆字模式)，其中部件按照小鹤双拼输入。
   例如，要输入“犇”字 (它可以拆为“牛牛牛”)，敲 `~nqnqnq` 空格即可，并看到这个字的拼音是 `ben`。
+- `@` 前缀: 显示常用邮箱后缀域名, 用于快捷输入。可自行添加自己公司邮箱域名后缀。
 - `;` 前缀: 用于自动上屏一些标点符号, 具体编码在 [`symbols.custom.yaml`](https://github.com/boomker/rime-fast-xhup/blob/57bb5b093ae164f46ffac52df47b18addf89c2b1/symbols.custom.yaml) 里, 可自行修改。
 - `;f` 前缀: 表情模式, 用于输出常用 emoji 表情和微信表情。比如, 输入 `;fdv` 会输出 ✅, 输入 `;fhj` 会输出 🚀
 - `V` 前缀：表情模式, 用于输出 emoji 表情。比如, 输入 `Vuvgo`, 会输出「水果」类表情
@@ -175,17 +179,17 @@ Rime 输入法配置文件，小鹤双拼+小鹤形码辅助方案。使用后�
 - 建议手动从 [librime 项目](https://github.com/rime/librime/releases) 安装或自行编译。
 - 小狼毫（Windows）和鼠须管（MacOS）的最新版本应该都支持 Lua 。
 - Trime（Android）要在 [GitHub 页面](https://github.com/osfans/trime) 下载最新测试版（注意不是稳定版）。
-  另外，Trime 自带的配置文件可能有缺失，此时可以考虑将电脑版 Rime 系统目录里的配置文件也复制到 Trime 的配置目录中，比如朙月拼音的方案文件和字典文件。
+  另外，Trime 自带的配置文件可能有缺失，此时可以考虑将电脑版 Rime 系统目录里的配置文件也复制
+  到 Trime 的配置目录中，比如朙月拼音的方案文件和字典文件。
 - 对于中州韵（Linux），据说 Arch Linux 源提供的 fcitx5-rime 可以在插件设置里开启 Lua 支持。
-- 其他发行版的用户可以考虑这个 [ibus-rime AppImage](https://github.com/hchunhui/build)。遇到调频失效等问题可以试着删除各 userdb、build、sync 文件夹重新部署/同步。如果这一问题反复出现，或者重启/部署/同步之后经常忘掉之前输入的词，可以尝试在 `flypy_xhfast.custom.yaml` 里开启“用户词典记录为文本格式”，或者看这个 AppImage 有没有发布新版本。
+- 其他发行版的用户可以考虑这个 [ibus-rime AppImage](https://github.com/hchunhui/build)。遇到调频失效等问题可以试着删除各 userdb、build、sync
+  文件夹重新部署/同步。如果这一问题反复出现，或者重启/部署/同步之后经常忘掉之前输入的词，可以尝试在 `flypy_xhfast.custom.yaml` 里开启“用户词典记录为文本格式”，或者看这个 AppImage 有没有发布新版本。
 
 ### 给进阶用户
 
 这一 Rime 输入方案的制作主要利用了这些文档，希望对 Rime 进行更深入的个性化配置的用户可以参考：
 
-- [GitHub-UserGuide](https://github.com/rime/home/wiki/UserGuide)（访问 GitHub 不稳定的可以用 [Gitee 版 UserGuide](https://gitee.com/lotem/rime-home/wikis/UserGuide)）。其中介绍的 Rime 基本用法适合新手查看，而最开始的“專題”一节还给出了若干有用的链接，供用户在个性化配置时查阅。
-  - 其实 UserGuide 只是该项目 wiki 中的一个文件，在网页查看的时候，侧栏里可以看到 wiki 的其他文件，它们也有参考价值。
-  - 例如，如果部署后发现没有达到预期的效果，可以考虑从侧栏里点进 `RimeWithSchemata`，按照其中“關於調試”一节下的说明，在日志文件里查找是否有部署出错的提示。
+- [GitHub-UserGuide](https://github.com/rime/home/wiki/UserGuide)（访问 GitHub 不稳定的可以用 [Gitee 版 UserGuide](https://gitee.com/lotem/rime-home/wikis/UserGuide)）。其中介绍的 Rime 基本用法适合新手查看
 - [设定项详解](https://github.com/LEOYoon-Tsaw/Rime_collections/blob/master/Rime_description.md)。这一文档主要解释了方案文件中各个选项的含义，并且提供了一些配置的例子。
 
 ### FAQ
