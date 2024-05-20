@@ -7,30 +7,23 @@ patch:
   # 候选菜单
   menu/+:
     # 注释掉下行以恢复常规候选标签序号
-    alternative_select_labels: [ ①, ②, ③, ④, ⑤, ⑥, ⑦, ⑧, ⑨, ⓪ ]
+    alternative_select_labels: [①, ②, ③, ④, ⑤, ⑥, ⑦, ⑧, ⑨, ⓪]
     # alternative_select_keys: 1234890      # 候选项选中快捷键
-    page_size: 7                            # 自定义候选项个数
-
-  # 候选菜单布局样式
-  style/+:
-    horizontal: false                 # 横向(true)/纵向(默认false)
-    inline_preedit: false             # 编码位于是否嵌入候选框
-    font_point: 20                    # 候选字体大小
-    line_spacing: 5                   # 行间距
+    page_size: 7 # 自定义候选项个数
 
   switches/+:
-    # - name: prediction
-    #   states: [联想关, 联想开]
-    #   reset: 0
-    - name: emoji
-      states: [🈚️, 😄]
-      reset: 1
-    - name: extended_charset
-      states: [通用, 增廣]
-      reset: 1
-    - name: charset_comment
-      states: [码区提示关, 码区提示开]
-      reset: 0
+  # - name: prediction
+  #   states: [联想关, 联想开]
+  #   reset: 0
+  - name: emoji
+    states: [🈚️, 😄]
+    reset: 1
+  - name: extended_charset
+    states: [通用, 增廣]
+    reset: 1
+  - name: charset_comment
+    states: [码区提示关, 码区提示开]
+    reset: 0
 
   engine/+:
     processors/+:
@@ -45,30 +38,30 @@ patch:
   # "engine/translators/@before 0": predict_translator
 
   key_binder/+:
-    import_preset: default            # 从 default.yaml 继承通用的
+    import_preset: default # 从 default.yaml 继承通用的
     # search: "`"                     # 辅码引导符
-    pin_cand: "Control+t"             # 候选词置顶
-    drop_cand: "Control+d"            # 强制删词, 无视输入的编码
-    hide_cand: "Control+x"            # 匹配当前输入码后隐藏指定的候选字词
-    turn_down_cand: "Control+j"       # 匹配当前输入码后降频指定的候选字词
-    switch_comment: "Control+n"       # 切换注释(小鹤形码 / 带调拼音 / 无)
-    commit_comment: "Control+p"       # 注释上屏
-    switch_english: "Control+g"       # 切换到英文输入方案
-    expand_abbr_py: "Control+0"       # 展开超级简拼
-    select_first_character: "minus"   # `-` 以词定字(第一个字)
-    select_last_character:  "equal"   # `=` 以词定字(最后一个字)
+    pin_cand: "Control+t" # 候选词置顶
+    drop_cand: "Control+d" # 强制删词, 无视输入的编码
+    hide_cand: "Control+x" # 匹配当前输入码后隐藏指定的候选字词
+    turn_down_cand: "Control+j" # 匹配当前输入码后降频指定的候选字词
+    switch_comment: "Control+n" # 切换注释(小鹤形码 / 带调拼音 / 无)
+    commit_comment: "Control+p" # 注释上屏
+    switch_english: "Control+g" # 切换到英文输入方案
+    expand_abbr_py: "Control+0" # 展开超级简拼
+    select_first_character: "minus" # `-` 以词定字(第一个字)
+    select_last_character: "equal" # `=` 以词定字(最后一个字)
     bindings/+:
-      - { when: composing, accept: grave,  send: "`" }      # `键 逐字追加辅码
-      - { when: has_menu,  accept: semicolon,  send: 2 }    # 分号用于第2候选
-      - { when: has_menu,  accept: apostrophe, send: 3 }    # 单引号用于第3候选
-      - { when: paging,    accept: comma,  send: Page_Up }  # 逗号返回上一页
-      - { when: has_menu,  accept: period, send: Page_Down }
-      - { when: composing, accept: Tab,    send: Shift+Right }
-      - { when: composing, accept: Shift+Tab, send: Shift+Left }
-      - { when: composing, accept: Control+i, send: Shift+Left }
-      - { when: composing, accept: Control+o, send: Shift+Right }
-      - { when: has_menu,  accept: Control+Shift+slash, toggle: emoji }
-      - { when: has_menu,  accept: Control+Shift+comma, toggle: charset_comment }
+    - {when: composing, accept: grave, send: "`"} # `键 逐字追加辅码
+    - {when: has_menu, accept: semicolon, send: 2} # 分号用于第2候选
+    - {when: has_menu, accept: apostrophe, send: 3} # 单引号用于第3候选
+    - {when: paging, accept: comma, send: Page_Up} # 逗号返回上一页
+    - {when: has_menu, accept: period, send: Page_Down}
+    - {when: composing, accept: Tab, send: Shift+Right}
+    - {when: composing, accept: Shift+Tab, send: Shift+Left}
+    - {when: composing, accept: Control+i, send: Shift+Left}
+    - {when: composing, accept: Control+o, send: Shift+Right}
+    - {when: has_menu, accept: Control+Shift+slash, toggle: emoji}
+    - {when: has_menu, accept: Control+Shift+comma, toggle: charset_comment,}
 
   recognizer/+:
     patterns/+:
@@ -85,7 +78,7 @@ patch:
       LaTeX: "^/lt(.*)$"
       easy_en: "^/oe[a-zA-Z]*$"
       chinese_number: "^/cn[0-9.]*$"
-      radical_lookup: "~[a-z]+$"              # ~ 引导部件拆字, 使用小鹤双拼编码
+      radical_lookup: "~[a-z]+$" # ~ 引导部件拆字, 使用小鹤双拼编码
 
   punctuator/+:
     full_shape/+:
@@ -95,65 +88,65 @@ patch:
       # ";": {commit: "；"}                  ## 取消注释后, 下行添加注释, 以恢复默认分号
       ";": [";", "；"]
       "@":
-        - "@"
-        # - "@xxx.com"
-        - "@gmail.com"
-        - "@foxmail.com"
-        - "@outlook.com"
-        - "@hotmail.com"
-        - "@qq.com"
-        - "@163.com"
-        - "@139.com"
+      - "@"
+      # - "@xxx.com"
+      - "@gmail.com"
+      - "@foxmail.com"
+      - "@outlook.com"
+      - "@hotmail.com"
+      - "@qq.com"
+      - "@163.com"
+      - "@139.com"
     symbols/+:
 
   speller/+:
     algebra/+:
-      - derive/[[]//                            # 注释后，间接辅码
+    - derive/[[]// # 注释后，间接辅码
 
-      ## 模糊音:
-      - derive/^([jqxy])v/$1u/
-      - derive/^([jqxy])u/$1v/
-      - derive/^u([h])/s$1/                     # uh => sh
-      - derive/^(i)g/$1f/                       # c[h]eng => c[h]en
-      - derive/^([ypbn])b/$1k/                  # in => ing
-      - derive/^z([^acdefghijklmnsu])/v$1/      # z => zh
-      - derive/^c([^acdefghijklmsuo])/i$1/      # c => ch
-      - derive/^s([^abcdefghijklmnu])/u$1/      # s => sh
-      # - derive/^l(.*)$/n$1/                   # l => n
-      # - derive/^n(.*)$/l$1/                   # n => l
-      # - derive/^v(.*)/z$1/                    # zh => z
-      # - derive/^i(.*)/c$1/                    # ch => c
-      # - derive/^u(.*)/s$1/                    # sh => s
-      # - derive/^([viu])g/$1f/                 # [zcs][h]eng => [zcs][h]en
-      # - derive/^([viu])f/$1g/                 # [zcs][h]en => [zcs][h]eng
-      # - derive/^([typdjxbm])k/$1b/            # ing => in
+    ## 模糊音:
+    - derive/^([jqxy])v/$1u/
+    - derive/^([jqxy])u/$1v/
+    - derive/^u([h])/s$1/ # uh => sh
+    - derive/^(i)g/$1f/ # c[h]eng => c[h]en
+    - derive/^([ypbn])b/$1k/ # in => ing
+    - derive/^z([^acdefghijklmnsu])/v$1/ # z => zh
+    - derive/^c([^acdefghijklmsuo])/i$1/ # c => ch
+    - derive/^s([^abcdefghijklmnu])/u$1/ # s => sh
+    # - derive/^l(.*)$/n$1/                   # l => n
+  # - derive/^n(.*)$/l$1/                   # n => l
+  # - derive/^v(.*)/z$1/                    # zh => z
+  # - derive/^i(.*)/c$1/                    # ch => c
+  # - derive/^u(.*)/s$1/                    # sh => s
+  # - derive/^([viu])g/$1f/                 # [zcs][h]eng => [zcs][h]en
+  # - derive/^([viu])f/$1g/                 # [zcs][h]en => [zcs][h]eng
+  # - derive/^([typdjxbm])k/$1b/            # ing => in
 
   custom_phrase/+:
-    comment_mark: " 📌"               # 自定义短语注解标记
+    comment_mark: " 📌" # 自定义短语注解标记
 
-  flypy_phrase/+:                     # 自动上屏短语
-    auto_commit: false                # 词条自动上屏开关
+  flypy_phrase/+: # 自动上屏短语
+    auto_commit: false # 词条自动上屏开关
 
-  flypy_key_help/+:                   # 小鹤双拼键位帮助
+  flypy_key_help/+: # 小鹤双拼键位帮助
     prefix: "/ok"
     tips: "小鹤双拼查键"
 
-  emoji/+:                            # Emoji转换
+  emoji/+: # Emoji转换
     tips: all
 
-  easy_en/+:                          # 英文输入方案
+  easy_en/+: # 英文输入方案
     prefix: "/oe"
     tips: "英文输入"
 
-  radical_lookup/+:                   # 部件组字
+  radical_lookup/+: # 部件组字
     prefix: "~"
     tips: 〔部件组字〕
 
-  radical_reverse_lookup/+:           # 部件组字反查
+  radical_reverse_lookup/+: # 部件组字反查
     overwrite_comment: false
     dictionary: kMandarin
 
-  history:                            # 上屏历史记录
+  history: # 上屏历史记录
     tips: "上屏历史"
     tag: history
     prefix: "/hs"
@@ -162,20 +155,20 @@ patch:
     initial_quality: 1000
     excluded_types: ["punct"]
 
-  pin_word:                           # 词条置顶配置
+  pin_word: # 词条置顶配置
     word_quality: 1000
     comment_mark: " 🔝"
     excluded_types: ["flypy_key_help", "easy_en", "radical_lookup"]
 
-  long_word_up:                       # 长词升频到第 idx 个位置
+  long_word_up: # 长词升频到第 idx 个位置
     idx: 3
     excluded_codes: ["date", "rq", "week", "time", "lunar", "sopt"]
 
-  cold_wold_reduce:                   # 生僻词条降频到第 idx 个位置
+  cold_wold_reduce: # 生僻词条降频到第 idx 个位置
     idx: 4
     excluded_types: ["easy_en"]
 
-  emoji_reduce:                       # Emoji 降频到第 idx 个位置
+  emoji_reduce: # Emoji 降频到第 idx 个位置
     idx: 6
 
   predictor:
