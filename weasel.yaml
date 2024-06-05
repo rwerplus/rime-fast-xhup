@@ -16,7 +16,7 @@ style:
   display_tray_icon: false # 显示系统托盘图标
 
   fullscreen: false # 全屏候选词窗口
-  inline_preedit: true # 在光标位置显示预编辑文本
+  inline_preedit: false # 在光标位置显示预编辑文本
   preedit_type: composition # 预编辑文本类型
   mouse_hover_ms: 0 # 鼠标悬停选词响应时间，若设置过低，鼠标在候选框上时会影响选词，值为 0 或将这行注释禁用此功能
   paging_on_scroll: false # 鼠标滚轮翻页候选词
