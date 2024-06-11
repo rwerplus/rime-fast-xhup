@@ -19,8 +19,8 @@ menu:
 switcher:
   caption: 「方案选单」
   hotkeys:
-  - Alt+grave
-  - F2
+    - Alt+grave
+    - Control+Shift+grave
   # 开关记忆，从方案选单（而非快捷键）切换时会记住的选项，需要记忆的开关不能设定 reset
   save_options:
   - ascii_punct
@@ -43,14 +43,14 @@ switcher:
 # inline_ascii 切换到临时英文模式，按回车上屏后回到中文状态
 # noop         屏蔽快捷键，不切换中英，但不要屏蔽 CapsLock
 ascii_composer:
-  good_old_caps_lock: true # true | false
-  switch_key: # commit_code | commit_text | inline_ascii | clear | noop
-    Caps_Lock: clear # commit_code | commit_text | clear
-    Shift_L: commit_code
-    Shift_R: commit_code
+  good_old_caps_lock: true    # true | false
+  switch_key:     # commit_code | commit_text | inline_ascii | clear | noop
+    Caps_Lock: clear          # commit_code | commit_text | clear
     Control_L: noop
     Control_R: noop
-    ###################################################################################
+    Shift_L: commit_code
+    Shift_R: inline_ascii
+###################################################################################
 
 # 下面的 punctuator recognizer key_binder 写了一些所有方案通用的配置项。
 # 写在 default.yaml 里，方便多个方案引用，就是不用每个方案都写一遍了。
@@ -151,14 +151,14 @@ key_binder:
   # select_first_character: "bracketleft"     # 左中括号 [
   # select_last_character: "bracketright"     # 右中括号 ]
   bindings:
-  - {when: has_menu, accept: semicolon, send: 2}
-  - {when: has_menu, accept: apostrophe, send: 3,} ## 单引号用于第3候选
-  # Tab / Shift+Tab 切换光标至下/上一个拼音
-  - {when: composing, accept: Shift+Tab, send: Shift+Left}
-  - {when: composing, accept: Tab, send: Shift+Right,}
-  # Tab / Shift+Tab 翻页
-  # - { when: has_menu, accept: Shift+Tab, send: Page_Up }
-  # - { when: has_menu, accept: Tab, send: Page_Down }
+    - {when: has_menu,  accept: semicolon, send: 2}
+    # - {when: has_menu,  accept: apostrophe, send: 3}       ## 单引号用于第3候选
+    # Tab / Shift+Tab 切换光标至下/上一个拼音
+    - {when: composing, accept: Shift+Tab, send: Shift+Left}
+    - {when: composing, accept: Tab, send: Shift+Right}
+    # Tab / Shift+Tab 翻页
+    # - { when: has_menu, accept: Shift+Tab, send: Page_Up }
+    # - { when: has_menu, accept: Tab, send: Page_Down }
 
   # Option/Alt + ←/→ 切换光标至下/上一个拼音
   # - { when: composing, accept: Alt+Left, send: Shift+Left }

@@ -3,14 +3,13 @@ ecdict: 把ECDICT.dict.yaml里的text作为comment，code作为text输出
 --]]
 
 local easy_en = {}
--- local easy_en_cands = {}
 
 local function truncate_comment(comment)
     local MAX_LENGTH = 20
-    local comment_res = comment:gsub(" | ", "; "):gsub("[;,.( ]+$", "")
+    local comment_res = comment:gsub(" |", "; "):gsub("[;,.=( ]+$", "")
     if #comment > MAX_LENGTH then
         comment_res = string.utf8_sub(comment_res, 1, MAX_LENGTH)
-        return comment_res and comment_res:gsub("[%a;,.( ]+$", "")
+        return comment_res and comment_res:gsub("[;,.=( ]+$", "")
     end
     return comment_res
 end
@@ -74,7 +73,6 @@ function easy_en.filter(input, env)
 end
 
 return {
-    -- processor = easy_en.processor,
-    translator = { init = easy_en.init, func = easy_en.translator },
+    -- translator = { init = easy_en.init, func = easy_en.translator },
     filter = { init = easy_en.init, func = easy_en.filter }
 }

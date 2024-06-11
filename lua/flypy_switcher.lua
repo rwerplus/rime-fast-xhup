@@ -1,8 +1,8 @@
-local reload_env = require("tools/env_api")
-
-local flypy_switcher = {}
 local processor = {}
 local translator = {}
+local flypy_switcher = {}
+local reload_env = require("tools/env_api")
+local rime_api_helper = require("tools/rime_api_helper")
 
 function flypy_switcher.init(env)
     reload_env(env)
@@ -22,19 +22,6 @@ function flypy_switcher.init(env)
     env.switch_english_key = config:get_string("key_binder/switch_english") or "Control+g"
     env.easy_en_prefix = config:get_string("recognizer/patterns/easy_en"):match("%^([a-z/]+).*") or "/oe"
     env.switch_options = config:get_string("recognizer/patterns/switch_options"):match("[a-z/]+") or "/so"
-    env.cand_select_kyes = {
-        ["space"] = -1,
-        ["Return"] = -1,
-        ["1"] = 0,
-        ["2"] = 1,
-        ["3"] = 2,
-        ["4"] = 3,
-        ["5"] = 4,
-        ["6"] = 5,
-        ["7"] = 6,
-        ["8"] = 7,
-        ["9"] = 8,
-    }
     env.alter_labels = { '①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⓪' }
     env.normal_labels = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }
     env.switch_options_menu = {
@@ -68,7 +55,7 @@ function processor.func(key, env)
     local context = engine.context
     local config = schema.config
     local composition = context.composition
-    if (composition:empty()) then return end
+    if composition:empty() then return 2 end
     local segment = composition:back()
     local preedit_code = context:get_script_text():gsub(" ", "")
 
@@ -76,7 +63,7 @@ function processor.func(key, env)
         if preedit_code:match("^" .. env.easy_en_prefix) and env.en_comment_overwrited then
             config:set_bool("ecdict_reverse_lookup/overwrite_comment", false) -- 重写英文注释为空
         elseif preedit_code:match("^" .. env.easy_en_prefix) and (not env.en_comment_overwrited) then
-            config:set_bool("ecdict_reverse_lookup/overwrite_comment", true) -- 重写英文注释为中文
+            config:set_bool("ecdict_reverse_lookup/overwrite_comment", true)  -- 重写英文注释为中文
         elseif (not env.cn_comment_overwrited) and (env.comment_hints > 0) then
             config:set_bool("radical_reverse_lookup/overwrite_comment", true) -- 重写注释为注音
         elseif env.cn_comment_overwrited and (env.comment_hints > 0) then
@@ -91,7 +78,7 @@ function processor.func(key, env)
         engine:apply_schema(Schema(schema.schema_id))
         context:push_input(preedit_code)
         context:refresh_non_confirmed_composition() -- 刷新当前输入法候选菜单, 实现看到实时效果
-        return 1                              -- kAccept
+        return 1                                    -- kAccept
     end
 
     if context:has_menu() and (key:repr() == env.commit_comment_key) then
@@ -114,16 +101,15 @@ function processor.func(key, env)
         env.engine:apply_schema(Schema("easy_en"))
         context:push_input(preedit_code)
         context:refresh_non_confirmed_composition() -- 刷新当前输入法候选菜单, 实现看到实时效果
-        return 1                              -- kAccept
+        return 1                                    -- kAccept
     end
 
-    if segment.prompt:match("切换配置选项") and (env.cand_select_kyes[key:repr()]) then
-        local key_value = env.cand_select_kyes[key:repr()]
-        local index = segment.selected_index
-        local idx = (key_value == -1) and index or key_value
-        local page_pos = (index // page_size) + 1
-        idx = ((key_value ~= -1) and (page_pos > 1)) and (key_value + (page_pos - 1) * page_size) or idx
-        local selected_cand = segment:get_candidate_at(idx)
+    if segment.prompt:match("切换配置选项") then
+        local key_value = key:repr()
+        local idx = segment.selected_index
+        local index = rime_api_helper.get_selected_candidate_index(key_value, idx, page_size)
+        if index < 0 then return 2 end
+        local selected_cand = segment:get_candidate_at(index)
         local cand_text = selected_cand.text:gsub(" ", "")
 
         if (cand_text == "切换纵横布局样式") then
@@ -144,7 +130,7 @@ function processor.func(key, env)
             config:set_string("style/text_orientation", switch_to_val) -- 重写 horizontal
         elseif (cand_text == "切换编码区位样式") then
             local switch_to_val = not env.inline_preedit_style
-            config:set_bool("style/inline_preedit", switch_to_val)          -- 重写 inline_preedit
+            config:set_bool("style/inline_preedit", switch_to_val) -- 重写 inline_preedit
         elseif (cand_text == "切换候选序号样式") then
             if env:Config_get("menu/alternative_select_labels")[1] == 1 then
                 env:Config_set("menu/alternative_select_labels", env.alter_labels)
@@ -192,7 +178,7 @@ function processor.func(key, env)
             env:Config_set("switches/@last/reset", switch_to_val)
         elseif (cand_text == "开关中英词条空格") then
             local filters = env:Config_get("engine/filters")
-            local target_filter = "lua_filter@cn_space_en_filter"
+            local target_filter = "lua_filter@*word_append_space*filter"
             local filter_idx = table.find_index(filters, target_filter)
             if filter_idx then
                 table.remove(filters, filter_idx)
@@ -202,7 +188,7 @@ function processor.func(key, env)
             env:Config_set("engine/filters", filters)
         elseif (cand_text == "禁用中英前置空格") then
             local processors = env:Config_get("engine/processors")
-            local target_processor = "lua_processor@space_leader_word"
+            local target_processor = "lua_processor@*word_append_space*processor"
             local processor_idx = table.find_index(processors, target_processor)
             if processor_idx then
                 table.remove(processors, processor_idx)
@@ -212,7 +198,7 @@ function processor.func(key, env)
         engine:apply_schema(Schema(schema.schema_id))
         return 1 -- kAccept
     end
-    return 2 -- kNoop, 不做任何操作, 交给下个组件处理
+    return 2     -- kNoop, 不做任何操作, 交给下个组件处理
 end
 
 function translator.func(input, seg, env)

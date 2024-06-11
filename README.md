@@ -1,6 +1,6 @@
 ## Rime 输入法双拼加辅助码方案
 
-Rime 输入法配置文件，小鹤双拼+小鹤形码辅助方案。使用后打字几乎不需要翻页，且学习成本明显低于五笔等输入方案。
+Rime 输入法配置方案，小鹤双拼+小鹤形码辅助方案。使用后打字几乎不需要翻页，且学习成本明显低于五笔等输入方案。
 如果用户还不了解双拼输入方案，或者不熟悉 Rime 输入法软件，可以先查看 [双拼与 Rime 输入法入门](intro.md)
 当然，您也可以先往下翻，看看本项目能提供什么样的功能。
 
@@ -115,29 +115,22 @@ Rime 输入法配置文件，小鹤双拼+小鹤形码辅助方案。使用后�
   例如：敲 `/oe` `elevation `或者 `/oe ` `elvtn` 再加空格，即可输入“elevation”。
 
   - 该功能基于 [easy-en](https://github.com/BlindingDark/rime-easy-en) 项目，简写特性由 `easy_en.schema.yaml` 文件中设置的拼写运算实现。
-    作者对字典文件进行了精简处理以加快部署速度。如果用户希望使用更完整的字典文件，而同时保留简写特性，
-    可以尝试将 `easy_en.dict.yaml` 文件更换为原项目的版本。
-  - Tips：单词第一次输入时用简写，Rime 会将它的词频记录进用户词典。之后的输入只需要敲完整单词的前半部分，
-    它作为输入过的单词就会排在靠前的位置。
+    作者对字典文件进行了精简处理以加快部署速度。如果用户希望使用更完整的字典文件，
+    而同时保留简写特性，可以尝试将 `easy_en.dict.yaml` 文件更换为原项目的版本。
+  - Tips：单词第一次输入时用简写，Rime 会将它的词频记录进用户词典。
+    之后的输入只需要敲完整单词的前半部分，它作为输入过的单词就会排在靠前的位置。
 
-- /`jj` 前缀: 用于快速启动或切换程序, 目前只在 macOS 上测试过
-- `/fj` 前缀: 用于输入常用短语(邮箱/手机号/银行卡号/收件地址); 和打开常用网站网址, 本地文件路径; 执行常见指令(开关系统设置)
-- `/hs` 前缀: 历史上屏记录
-- `/cn` 前缀：用于输入中文数字, 例如: 输入 `/cn` `123` 得到 “一百二十三”, “壹佰贰拾叁”, 等。
-- `/lt` 前缀：简易 LaTeX 公式。例如：敲 `/lt` `<<f,ff>>ooc0 ` 空格，即可输入“`$\langle f,\phi\rangle\propto 0$`”。
-
-  - 如果发现该功能无法使用，考虑检查所用的 Rime 框架是否支持 Lua，见 [下方的说明](#关于-lua-支持)。
-  - 简写由重复的字符触发，例如 `aa` 变成“`\alpha`”。如果重复的字符是 `jvo` 中的一个，需要接上后面的一个字符触发，例如 `jj;` 变成“`\mapsto`”。
-  - 使用 `` ` `` 避免重复字符触发，例如敲 `,,bb` 得到“`\math\beta`”不是我们想要的，敲 `` ,,b`b `` 则可以得到“`\mathbb`”。
-  - 如果 `` ` `` 两侧的字符不一样，则变成空格。例如，敲 `` \to`0 `` 得到“`\to 0`”。连续的两个 `` ` `` 始终按照一个空格处理。
-  - 形如 `x±1` 的上下标较为常见，用 `oo` 接上 `a/s/d/f`（分别代表：上标+1，上标-1，下标+1，下标-1）中的一个，
-    再接上一个字符即可触发。例如，`xoodn` 会变成“`x_{n+1}`”。
-  - 在 `rime.lua` 里可以设置“启用特殊符号替换”，默认的替换规则是 `{}` 与 `[]` 互换，`()` 与 `;'` 互换，`_^` 与 `./` 互换，
-    这使常用符号输入更为方便。替换规则可以自行修改。
-    - 例如，现在敲 `f.[2n];x'` 可以得到“`f_{2n}(x)`”。
-    - 注意这会影响原有的重复字符触发，例如原来 `..` 变成“`\cdot`”，现在是 `__` 变成它。
-
-- 敲 `date`, `time`, `today`, `week`, `/wd`, /`wt`, `/wk`, `/nl`, 可以输入当天的日期, 时间, 星期, 农历。
+- /`jk` 前缀: 用于快速启动或切换程序, 目前只在 macOS 上测试过。
+- `/fj` 前缀: 用于输入常用短语(邮箱/手机号/银行卡号/收件地址); 和打开常用网站网址,
+  本地文件路径; 执行常见指令(开关系统设置) 等等, 可自行在 [配置文件](https://github.com/boomker/rime-fast-xhup/blob/4493152dfee01f4a49c961180b25ca73a6555dea/lua/launcher_config.lua)里添加。
+- `/hs` 前缀: 历史上屏记录, 充当简易输入记录器, 聊天记录回溯 😈, 不会记录 Emoji 表情。
+- `/vs` 前缀: 计算器, 支持加减乘除法, 开方、幂次方、阶乘、正弦余弦函数等多种运算。
+- `/so` 前缀: 选项切换功能菜单, 实现了方案中个性化配置与选项实时切换或更改, 某些配置会延迟生效。
+- `/cn` 前缀: 用于输入中文数字, 例如: 输入 `/cn` `123` 得到 “一百二十三”, “壹佰贰拾叁”, 等。
+- `/lt` 前缀: 简易 LaTeX 公式。例如：敲 `/lt` `ff>>ooc` 空格，即可输出 `$\phi\rangle\propto$`。
+- `date`, `time`, `today`, `week`, `/wd`, /`wt`, `/wk`, `/nl`, `/uts` 可以输入当天的日期, 时间, 星期, 农历, 时间戳。
+  `/wqt ` `/wzt ` `/wmt ` `/wht ` `/wuz ` `/wxz ` `/wuy ` `/wxy` 等可输出最近几日周月日期时间。
+- `/wf` 前缀: 微信表情列表; `/mba` `/mbs` `/mbc` 前缀: Markdown 代码块快捷输入。
 - `~` 前缀：部件组字模式 (类似搜狗拼音的 u 拆字模式)，其中部件按照小鹤双拼输入。
   例如，要输入“犇”字 (它可以拆为“牛牛牛”)，敲 `~nqnqnq` 空格即可，并看到这个字的拼音是 `ben`。
 - `@` 前缀: 显示常用邮箱后缀域名, 用于快捷输入。可自行添加自己公司邮箱域名后缀。
@@ -197,13 +190,13 @@ Rime 输入法配置文件，小鹤双拼+小鹤形码辅助方案。使用后�
 1. - Q: Windows 系统部署项目失败, 一直处于部署中
    - A: 注释 **[flypy_xhfast.dict.yaml](https://github.com/boomker/rime-fast-xhup/blob/a877ed5632de7edf133fe116de05eb601f7e838f/flypy_xhfast.dict.yaml)** 文件里大词库
 2. - Q: 恢复默认分号 `;` 输出方式, 不想使用 `;`引导的标点符号输出方式
-   - A: 在[主配置文件](https://github.com/boomker/rime-fast-xhup/blob/a877ed5632de7edf133fe116de05eb601f7e838f/flypy_xhfast.schema.yaml)里解开[这行](https://github.com/boomker/rime-fast-xhup/blob/95ee165863b37087b6c3776c9ddecf9f525b42e4/flypy_xhfast.schema.yaml#L264)注释, 并将下一行注释掉
-3. - Q: 如何取消中英候选词条中的空格?
-   - A: 注释主配置文件里的[这行](https://github.com/boomker/rime-fast-xhup/blob/a877ed5632de7edf133fe116de05eb601f7e838f/flypy_xhfast.schema.yaml#L101)
+   - A: 在 `custom` 配置文件里解开 [这行](https://github.com/boomker/rime-fast-xhup/blob/4493152dfee01f4a49c961180b25ca73a6555dea/flypy_xhfast.custom.yaml#L87) 注释, 并将下一行注释掉. 或者在 `/so` 里进行切换
+3. - Q: 如何取消中英混合候选词条中的空格?
+   - A: 注释 `custom` 配置文件里的 [这行](https://github.com/boomker/rime-fast-xhup/blob/4493152dfee01f4a49c961180b25ca73a6555dea/flypy_xhfast.custom.yaml#L37)
 4. - Q: 中英混合输出自动添加空格功能, 有时会在编辑区起始位置添加空格
-   - A: 这个功能目前还不够完善, 可以将[这行](https://github.com/boomker/rime-fast-xhup/blob/95ee165863b37087b6c3776c9ddecf9f525b42e4/flypy_xhfast.schema.yaml#L50)注释掉
+   - A: 这个功能目前还不够完善, 可以将 [这行](https://github.com/boomker/rime-fast-xhup/blob/4493152dfee01f4a49c961180b25ca73a6555dea/flypy_xhfast.custom.yaml#L36) 注释掉
 5. - Q: 形码辅助引导符可以去掉吗? 想直接使用辅助码, 不用引导符
-   - A: 可以的, 取消[这行](https://github.com/boomker/rime-fast-xhup/blob/79c0256ae8b892ef5f4045bc875accf77ae0835d/flypy_xhfast.schema.yaml#L396)注释, 并放到 `speller` 这行下面
+   - A: 可以的, 取消 [这行](https://github.com/boomker/rime-fast-xhup/blob/4493152dfee01f4a49c961180b25ca73a6555dea/flypy_xhfast.custom.yaml#L103) 注释即可
 6. - Q: 快捷指令功能能在移动端支持触控点击吗?
    - A: 目前暂不支持
 7. - Q: 符号配对功能有时会有光标居中动作的滞后现象
@@ -211,14 +204,14 @@ Rime 输入法配置文件，小鹤双拼+小鹤形码辅助方案。使用后�
 8. - Q: 在微信聊天里, 有一些候选项带有中括号 `[]`是怎么回事?
    - A: 这是微信表情, 在候选菜单里不能显示, 在微信里可正常显示. 是通过 [`OpenCC`](https://github.com/BYVoid/OpenCC) 在 [`emoji_word.txt`](https://github.com/boomker/rime-fast-xhup/blob/84e5314dfd70a3286587164233a9576d8d188ee4/opencc/emoji_word.txt) 编码的
 9. - Q: 音码键位左右并击规则是什么, 可以删除或不启用吗?
-   - A: 这些规则采用了 不对应汉字读音的字母组合来编码一些小鹤双拼的音码. 可以不启用, 注释掉 [这行](https://github.com/boomker/rime-fast-xhup/blob/79c0256ae8b892ef5f4045bc875accf77ae0835d/flypy_xhfast.schema.yaml#L419) 即可
+   - A: 这些规则采用了 不对应汉字读音的字母组合来编码一些小鹤双拼的音码. 可以不启用, 注释掉 [这些行](https://github.com/boomker/rime-fast-xhup/blob/4493152dfee01f4a49c961180b25ca73a6555dea/flypy_xhfast.schema.yaml#L324-L326) 即可
 10. - Q: 词库中存在注音错误的词条
     - A: 因为采用开源的 [`pypinyin`](https://github.com/mozillazg/python-pinyin) 项目，存在词组中多音字返回了另外一个注音
 11. - Q: 有一些字打不出来, 字表中的字不全或形码错误
-    - A: 生僻字可以通过上述的 `~` 反查功能来输入, 还可以启用[扩展字表](https://github.com/boomker/rime-fast-xhup/blob/79c0256ae8b892ef5f4045bc875accf77ae0835d/flypy_xhfast.dict.yaml#L10); 形码错误或可能是容错码, 可自行修改
+    - A: 生僻字可以通过上述的 `~` 反查功能来输入, 还可以启用 [扩展字表](https://github.com/boomker/rime-fast-xhup/blob/79c0256ae8b892ef5f4045bc875accf77ae0835d/flypy_xhfast.dict.yaml#L10); 形码错误或可能是容错码, 可自行修改
 12. - Q: 候选菜单里有无法显示的像「问号」一样的候选字
     - A: 在 [`squirrel.custom.yaml`](https://github.com/boomker/rime-fast-xhup/blob/84e5314dfd70a3286587164233a9576d8d188ee4/squirrel.custom.yaml) 或 [`weasel.yaml`](https://github.com/boomker/rime-fast-xhup/blob/84e5314dfd70a3286587164233a9576d8d188ee4/weasel.yaml) 配置可以正常显示的字体, 推荐 [`MiSans`](https://hyperos.mi.com/font/download)
-13. - Q: `~`反查出来在字没有注音, 部署日志中提示缺少 `kMandarin`
+13. - Q: `~` 反查出来在字没有注音, 部署日志中提示缺少 `kMandarin` 反查词典文件
     - A: 请自行到这个[项目](https://github.com/mirtlecn/rime-radical-pinyin/releases)下载反查注音文件, 或将 `others` 下的 `kMandarin.reverse.bin` 移动到 `build`目录里
 
 ### 鸣谢
