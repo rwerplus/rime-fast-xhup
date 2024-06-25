@@ -99,7 +99,7 @@ win11_preset:
     hilite_padding_y: 6 # 高亮 Y 纵向方向边距
     round_corner: 6 # 高亮圆角
     shadow_offset_y: 6 # 阴影 Y 轴偏移
-    shadow_radius: 13 # 阴影半径
+    shadow_radius: 6 # 阴影半径
 
 win10_preset:
   label_format: "%s" # 候选词标签格式
