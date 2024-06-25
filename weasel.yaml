@@ -28,7 +28,7 @@ style:
   font_point: 12 # 主要字体大小
   label_font_point: 12 # 标签字体大小
   comment_font_point: 12 # 注释字体大小
-  mark_text: "🤣" # 标记标记文本
+  mark_text: "👉" # 标记标记文本
 
   vertical_auto_reverse: false # 垂直排列时自动反转顺序
   vertical_text: false # 垂直文本显示
@@ -98,8 +98,8 @@ win11_preset:
     hilite_padding_x: 7 # 高亮 X 横向方向边距
     hilite_padding_y: 6 # 高亮 Y 纵向方向边距
     round_corner: 6 # 高亮圆角
-    shadow_offset_y: 6 # 阴影 Y 轴偏移
-    shadow_radius: 13 # 阴影半径
+    shadow_offset_y: 0 # 阴影 Y 轴偏移
+    shadow_radius: 6 # 阴影半径
 
 win10_preset:
   label_format: "%s" # 候选词标签格式
