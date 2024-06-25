@@ -28,7 +28,7 @@ style:
   font_point: 12 # 主要字体大小
   label_font_point: 12 # 标签字体大小
   comment_font_point: 12 # 注释字体大小
-  mark_text: "👉" # 标记标记文本
+  mark_text: "🤡" # 标记标记文本
 
   vertical_auto_reverse: false # 垂直排列时自动反转顺序
   vertical_text: false # 垂直文本显示

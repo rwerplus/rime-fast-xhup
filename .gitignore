@@ -1,5 +1,6 @@
 sync/
 build/
+*.userdb/
 __pycache__/
 user.yaml
 .DS_Store
