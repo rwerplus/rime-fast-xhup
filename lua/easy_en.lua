@@ -16,25 +16,39 @@ end
 
 function easy_en.init(env)
     local config = env.engine.schema.config
-    env.easy_en_prefix = config:get_string("recognizer/patterns/easy_en"):match("%^([a-z/]+).*") or "/oe"
+    local schema = Schema("easy_en") -- schema_id
+    local _easy_en_pat = config:get_string("recognizer/patterns/easy_en") or nil
+    env.wildcard = '*'
+    env.mem = Memory(env.engine, schema, "translator")
+    env.expan_word_count = config:get_int("expan_word_count") or 150
+    env.easy_en_prefix = _easy_en_pat and _easy_en_pat:match("%^([a-z/]+).*") or "/oe"
     env.en_comment_overwrited = config:get_bool("ecdict_reverse_lookup/overwrite_comment") or false
 end
 
---[[
 function easy_en.translator(input, seg, env)
-    if input:match("^%l+%*%l+$") then
-        local input_code, fuzz_str = input:match("(.*)%*(.*)")
-        local patter_str = string.format("^%s.*%s", input_code, fuzz_str)
-        local easy_en_tran = env.easy_en_translator:query(input_code, seg)
-        for cand in easy_en_tran:iter() do
-            if cand.text:match(patter_str) then
-                -- table.insert(easy_en_cands, cand)
-                yield(cand)
+    if string.match(input, env.wildcard) then
+        local tailer = string.match(input, '[^' .. env.wildcard .. ']+$') or ''
+        local header = string.match(input, '^[^' .. env.wildcard .. ']+')
+        env.mem:dict_lookup(header, true, env.expan_word_count) -- expand_search
+        for dictentry in env.mem:iter_dict() do
+            local codetail = string.match(dictentry.comment:lower(), tailer .. '$') or ''
+            if tailer and (codetail == tailer) then
+                local code = env.mem:decode(dictentry.code)
+                local codeComment = table.concat(code, ",")
+                local ph = Phrase(env.mem, "expand_en_word", seg.start, seg._end, dictentry)
+                ph.comment = codeComment
+                yield(ph:toCandidate())
             end
         end
     end
 end
---]]
+
+function easy_en.fini(env)
+    if env.mem then
+        env.mem:disconnect()
+        env.mem = nil
+    end
+end
 
 function easy_en.filter(input, env)
     local en_cands = {}
@@ -57,14 +71,14 @@ function easy_en.filter(input, env)
                 table.insert(en_cands, cand)
             else
                 local preedit_code = input_code:lower():gsub(env.easy_en_prefix, "")
-                if (preedit_code == cand.text:lower()) then cand.comment = "" end
+                if (cand.text:lower():match(preedit_code)) then cand.comment = "" end
                 table.insert(en_cands, cand) -- 防止候选太多, 输入卡顿
             end
         else
             yield(cand)
         end
 
-        if #en_cands >= 80 then break end -- 防止候选太多, 输入卡顿
+        if #en_cands >= 100 then break end -- 防止候选太多, 输入卡顿
     end
 
     for _, cand in ipairs(en_cands) do
@@ -73,6 +87,6 @@ function easy_en.filter(input, env)
 end
 
 return {
-    -- translator = { init = easy_en.init, func = easy_en.translator },
-    filter = { init = easy_en.init, func = easy_en.filter }
+    translator = { init = easy_en.init, func = easy_en.translator, fini = easy_en.fini },
+    filter = { init = easy_en.init, func = easy_en.filter, fini = easy_en.fini }
 }

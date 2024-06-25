@@ -5,6 +5,7 @@ local favor_items = nil
 local second_menu_items = nil
 local first_menu_selected_text = nil
 local second_menu_selected_text = nil
+require("tools/metatable")
 local reload_env = require("tools/env_api")
 local rime_api_helper = require("tools/rime_api_helper")
 -- local logger = require("tools/logger")
@@ -13,15 +14,15 @@ local function cmd(system, cmdArgs, appId)
     if system:lower():match("macos") and (cmdArgs == "exec") then
         local osascript = appId
         os.execute(osascript)
-    elseif system:lower():match("ios") and (cmdArgs == "exec") then
-        local osascript = appId
-        os.execute(osascript)
+        -- elseif system:lower():match("ios") and (cmdArgs == "exec") then
+        --     local osascript = appId
+        --     os.execute(osascript)
     elseif system:lower():match("macos") then
         local osascript = "open " .. cmdArgs .. appId
         os.execute(osascript)
-    elseif system:lower():match("ios") then
-        local osascript = "open " .. cmdArgs .. appId
-        os.execute(osascript)
+        -- elseif system:lower():match("ios") then
+        -- local osascript = "open " .. cmdArgs .. appId
+        -- os.execute(osascript)
     elseif system:lower():match("windows") then
         local script = "start " .. "" .. appId
         os.execute(script)
@@ -41,7 +42,7 @@ end
 
 function processor.func(key, env)
     local engine = env.engine
-    local system_name = env.system_name
+    local system_name = env.system_name:lower()
     local favorCmdPrefix = env.favor_cmd_prefix
     local appLaunchPrefix = env.app_launch_prefix
     local allCommandItems = env.all_command_items
@@ -58,7 +59,7 @@ function processor.func(key, env)
             inputCode:match("^" .. favorCmdPrefix)
             or inputCode:match("^" .. appLaunchPrefix)
             or inputCode:match("^/j%l+")
-        )
+        ) or composition:empty()
     then
         return 2
     end
@@ -90,14 +91,9 @@ function processor.func(key, env)
 
     local selected_index = segment.selected_index or -1
     local selected_cand_idx = rime_api_helper.get_selected_candidate_index(keyValue, selected_index, page_size)
-    if selected_cand_idx < 0 then return 2 end
+    if (selected_cand_idx < 0) then return 2 end
 
-    if
-        context:has_menu()
-        and (type(selected_cand_idx) == "number")
-        and (tonumber(selected_cand_idx) >= 0)
-        and (inputCode:match("^" .. favorCmdPrefix))
-    then
+    if (inputCode:match("^" .. favorCmdPrefix)) then
         if (selected_cand_idx >= 0) and (inputCode == favorCmdPrefix) and segment.prompt:match("快捷指令") then
             local cand = segment:get_candidate_at(selected_cand_idx)
             local candidateText = cand.text
@@ -128,16 +124,19 @@ function processor.func(key, env)
             if (action == "commit") and type(items[1]) ~= "string" then
                 local commitText = allCommandItems["Favors"][first_menu_selected_text]["items"][candidateText]
                 engine:commit_text(commitText)
-            elseif action == "open" and type(items[1]) == "string" then
+            elseif action == "open" and type(items[1]) == "string" and (system_name ~= "ios") then
                 cmd(system_name, "", candidateText)
-            elseif action == "open" then
+            elseif (action == "open") and (system_name ~= "ios") then
                 local _path = allCommandItems["Favors"][first_menu_selected_text]["items"][candidateText]
                 local path = _path:gsub(" ", "\\ ")
                 cmd(system_name, "", path)
-            elseif action == "exec" then
+            elseif (action == "exec") and (system_name ~= "ios") then
                 local _cmdString = allCommandItems["Favors"][first_menu_selected_text]["items"][candidateText]
                 local cmdString = _cmdString:match("^/") and _cmdString:gsub(" ", "\\ ", 1) or _cmdString
                 cmd(system_name, "exec", cmdString)
+            elseif (system_name == "ios") and type(items[1]) ~= "string" then
+                local commitText = allCommandItems["Favors"][first_menu_selected_text]["items"][candidateText]
+                engine:commit_text(commitText)
             else
                 engine:commit_text(candidateText)
             end
@@ -150,23 +149,22 @@ function processor.func(key, env)
         end
     end
 
-    if context:has_menu()
-        and (type(selected_cand_idx) == "number")
-        and (tonumber(selected_cand_idx) >= 0)
-        and (preeditCodeLength >= appLaunchPrefix:len())
+    if (preeditCodeLength >= appLaunchPrefix:len())
         and (inputCode:match("^" .. appLaunchPrefix) or inputCode:match("^/j"))
     then
-        local selected_items = allCommandItems[system_name][inputCode]
+        local sys_name = env.system_name
+        local selected_items = allCommandItems[sys_name][inputCode]
         if (appLaunchPrefix ~= "/j") and (inputCode:sub(1, appLaunchPrefix:len()) == appLaunchPrefix) then
             local appTriggerKey = "/j" .. inputCode:gsub(appLaunchPrefix, "", 1)
-            selected_items = allCommandItems[system_name][appTriggerKey]
+            selected_items = allCommandItems[sys_name][appTriggerKey]
         end
 
         if not selected_items then
-            selected_items = allCommandItems[system_name]
+            selected_items = allCommandItems[sys_name]
         end
 
         local appId = nil
+        -- local candidateText = nil
         local candidateText = segment:get_candidate_at(selected_cand_idx).text
         if selected_items and table.len(selected_items) > 2 then
             for _, val in pairs(selected_items) do
@@ -184,7 +182,7 @@ function processor.func(key, env)
 
         if appId and segment.prompt:match("应用闪切") then
             context:clear()
-            cmd(system_name, "-b ", appId)
+            cmd(sys_name, "-b ", appId)
             return 1 -- kAccepted 收下此key
         else
             engine:commit_text(candidateText)
@@ -196,25 +194,30 @@ function processor.func(key, env)
     return 2
 end
 
+-- function processor.fini(env)
+--     env.notifier_commit_launcher:disconnect()
+-- end
+
 function translator.init(env)
     env.launcher_config = require("launcher_config")
     env.app_launch_prefix = env.launcher_config[1]
     env.favor_cmd_prefix = env.launcher_config[2]
-    env.app_command_items = env.launcher_config[3]
+    env.all_command_items = env.launcher_config[3]
     env.system_name = rime_api_helper.detect_os()
 end
 
 function translator.func(input, seg, env)
     local composition = env.engine.context.composition
-    local app_command_items = env.app_command_items
+    local allCommandItems = env.all_command_items
     local appLaunchPrefix = env.app_launch_prefix
     local favorCmdPrefix = env.favor_cmd_prefix
     local system_name = env.system_name
-    local app_items = app_command_items[system_name][input]
+    local all_app_items = allCommandItems[system_name] or nil
+    local app_items = all_app_items and all_app_items[input] or nil
 
     if (appLaunchPrefix ~= "/j") and (input:sub(1, appLaunchPrefix:len()) == appLaunchPrefix) then
         local appTriggerKey = "/j" .. input:gsub(appLaunchPrefix, "", 1)
-        app_items = app_command_items[system_name][appTriggerKey]
+        app_items = all_app_items and all_app_items[appTriggerKey]
     end
 
     if composition:empty() then return end
@@ -233,8 +236,9 @@ function translator.func(input, seg, env)
         cand.quality = 999
         yield(cand)
     elseif input:match("^" .. appLaunchPrefix) then
+        if not all_app_items then return end
         segment.prompt = "〔应用闪切〕"
-        for _, val in pairs(app_command_items[system_name]) do
+        for _, val in pairs(all_app_items) do
             if type(val[1]) == "string" then
                 local cand = Candidate("shortcut", seg.start, seg._end, val[1], "")
                 cand.quality = 999
@@ -258,12 +262,12 @@ function translator.func(input, seg, env)
         first_menu_selected_text = nil
         segment.prompt = "〔快捷指令〕"
 
-        for key, _ in pairs(app_command_items["Favors"]) do
+        for key, _ in pairs(allCommandItems["Favors"]) do
             local cand = Candidate("favor", seg.start, seg._end, key, "")
             cand.quality = 999
             yield(cand)
         end
-        favor_items = app_command_items["Favors"]
+        favor_items = allCommandItems["Favors"]
     end
 
     if
@@ -276,7 +280,7 @@ function translator.func(input, seg, env)
         local matchCount = 0
         local matchMenuKey = ""
         local matchMenuItems = nil
-        for key, val in pairs(app_command_items["Favors"]) do
+        for key, val in pairs(allCommandItems["Favors"]) do
             if key:match("^" .. first_menu_prefix) then
                 matchCount = matchCount + 1
                 matchMenuKey = key
@@ -294,7 +298,7 @@ function translator.func(input, seg, env)
                 cand.quality = 999
                 yield(cand)
             end
-            favor_items = app_command_items["Favors"]
+            favor_items = allCommandItems["Favors"]
             first_menu_selected_text = matchMenuKey
         else
             local cand = Candidate("unknown", seg.start, seg._end, "未匹配到一级菜单", "")
@@ -426,7 +430,8 @@ function filter.func(input, env)
 
         for _, cand in ipairs(sorted_command_cands) do
             local cand_text = cand.text:gsub("[0-9]+$", "")
-            yield(ShadowCandidate(cand, cand.type, cand_text))
+            ---@diagnostic disable-next-line: missing-parameter
+            yield(ShadowCandidate(cand, cand.type, cand_text, ""))
         end
     end
 
