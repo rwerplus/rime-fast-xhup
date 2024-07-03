@@ -11,14 +11,6 @@ patch:
     # alternative_select_keys: 1234890      # 候选项选中快捷键
     page_size: 7 # 自定义候选项个数
 
-  # 候选菜单布局样式
-  style/+:
-    font_point: 20 # 候选字大小
-    line_spacing: 8 # 行间距大小
-    inline_preedit: false # 编码位于是否嵌入候选框
-    candidate_list_layout: stacked # 候选菜单横向(linear)/纵向(stacked)
-    text_orientation: horizontal # 候选文字横向(horizontal)/纵向(vertical)
-
   switches/+:
   - name: emoji
     states: [🈚️, 😄]
